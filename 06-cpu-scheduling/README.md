@@ -32,8 +32,46 @@ Order the processes so that the one that takes the least amount of time gets to 
 
 But what if these processes don't _arrive_ at the same time?
 
-If A arrives first, then B and C some time later, the convoy effect's still going to happen:
+If A arrives first, then B and C sometime later, the convoy effect's still going to happen:
 
 ![](visuals/SJF_Late.png)
 
 ## Shortest Time-to-Completion First (STCF)
+
+So what if processes _don't_ have to run all the way through? This time, we'll run process A until B and C arrive. Then, we compare the _remaining time of A_ with the run time of B and C and schedule whatever's done first:
+
+![](visuals/STCF.png)
+
+## Response Time
+
+STCF is good when we only have to worry about turnaround time, but when we think about _response time_, STCF can perform quite poorly.
+
+Here, we have 3 processes with the same run time:
+
+![](visuals/ResponseTime.png)
+
+With STCF, B has a response time of 5, and C has a response time of 10 — not good!
+
+- Think about a terminal. When we input a command, we don't want to wait 10s before the process starts!
+
+## Round Robin
+
+Round-Robin scheduling is a way to minimize response time. It works by running a process for some short amount of time then switching to the next process. This happens until all processes finish.
+
+![](visuals/RoundRobin.png)
+
+This comes at the cost of turnaround time — processes start earlier, but finish later as well.
+
+## I/O
+
+What if processes are waiting for I/O, e.g., a network call, a memory read, a keyboard input? If we use our approach from before, we would have times where the CPU isn't doing anything:
+
+![](visuals/IO.png)
+
+Instead, we should consider process A to be 'done' when it makes the I/O call. When I/O finishes, we should treat the next bit of A as a new process that's waiting to be scheduled. This way, we can run other processes while waiting:
+
+![](visuals/IO_Intertwined.png)
+
+## Omniscient
+
+In reality though, the OS can't possibly know how long an incoming process is going to run for. So how can our scheduler account for that?
